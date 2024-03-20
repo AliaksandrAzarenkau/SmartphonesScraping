@@ -2,11 +2,54 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import time
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
+
+from services.selenium_services import get_web_driver
+from services.pandas_services import get_os_statistics
+from scrapy_project.spiders.smartphones_spider import SmartphonesSpider
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+
+
+class SeleniumMiddleware:
+    driver = get_web_driver()
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        middleware = cls()
+        crawler.signals.connect(middleware.spider_closed, signals.spider_closed)
+        return middleware
+
+    def process_request(self, request, spider):
+
+        self.driver.get(request.url)
+        time.sleep(3)
+
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        body = str.encode(self.driver.page_source)
+        time.sleep(2)
+
+        return HtmlResponse(
+            self.driver.current_url,
+            body=body,
+            encoding='utf-8',
+            request=request
+        )
+
+    def spider_opened(self, spider):
+        spider.logger.info("Spider opened: %s" % spider.name)
+
+    def spider_closed(self):
+        self.driver.close()
+        self.driver.quit()
+        print(f'\n'
+              f'{get_os_statistics(SmartphonesSpider.os_list)}'
+              f'\n')
 
 
 class ScrapyProjectSpiderMiddleware:
@@ -78,6 +121,7 @@ class ScrapyProjectDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+
         return None
 
     def process_response(self, request, response, spider):

@@ -49,18 +49,17 @@ ROBOTSTXT_OBEY = False
 #    "scrapy_project.middlewares.ScrapyProjectSpiderMiddleware": 543,
 # }
 
-ROTATED_PROXY_ENABLED = True
-PROXY_STORAGE = 'scrapy_rotated_proxy.extensions.file_storage.FileProxyStorage'
-ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+# ROTATED_PROXY_ENABLED = True
+# PROXY_STORAGE = 'scrapy_rotated_proxy.extensions.file_storage.FileProxyStorage'
+# ROTATING_PROXY_LIST_PATH = 'proxies.txt'
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # "scrapy_project.middlewares.ScrapyProjectDownloaderMiddleware": 543,
-    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
-    # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    # 'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+    'scrapy_project.middlewares.SeleniumMiddleware': 800,
+    # 'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    # 'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
 }
 
 # Enable or disable extensions
@@ -100,6 +99,3 @@ DOWNLOADER_MIDDLEWARES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-
-# SELENIUM_DRIVER_NAME = 'chrome'
-# SELENIUM_DRIVER_ARGUMENTS = ['-headless']  # '--headless' if using chrome instead of firefox

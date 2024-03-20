@@ -1,17 +1,12 @@
-import random
-
 from selenium import webdriver
 from selenium_stealth import stealth
 
-from scrapy import Request
-
-import time
 from fake_useragent import UserAgent
 
 
-def selenium_webdriver():
-    useragent = str(UserAgent(platforms='pc'))
+def get_web_driver():
 
+    useragent = UserAgent(platforms='pc')
     options = webdriver.ChromeOptions()
 
     options.add_argument("start-maximized")
@@ -26,15 +21,15 @@ def selenium_webdriver():
 
     driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
         'source': '''
-            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
-            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
-            delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
-      '''
+                delete window.cdc_adoQpoasnfa76pfcZLmcfl_Array;
+                delete window.cdc_adoQpoasnfa76pfcZLmcfl_Promise;
+                delete window.cdc_adoQpoasnfa76pfcZLmcfl_Symbol;
+          '''
     })
 
     stealth(driver,
-            user_agent=useragent,
-            languages=["en-US", "en"],
+            user_agent=str(useragent),
+            languages=["ru-RU", "ru"],
             vendor="Google Inc.",
             platform="Win32",
             webgl_vendor="Intel Inc.",
